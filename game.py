@@ -42,7 +42,9 @@ while running:
                 speed_player = 0.5
         
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+            if speed_player == 0.5 and event.key == pygame.K_RIGHT:
+                speed_player = 0
+            if speed_player == -0.5 and event.key == pygame.K_LEFT:
                 speed_player = 0
 
     screen.fill((0, 0, 0))

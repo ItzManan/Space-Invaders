@@ -6,12 +6,17 @@ pygame.display.set_caption("Space Invaders")
 icon = pygame.image.load("logo.png")
 pygame.display.set_icon(icon)
 ship = pygame.image.load("spaceship.png")
+alien = pygame.image.load("Alien.png")
 playerX = 370
-playerY = 480 
+playerY = 480
+alienX = 370
+alienY = 100 
 speed = 0
 
 def player(x, y):
     screen.blit(ship, (x, y))
+def aliens():
+    screen.blit(alien, (alienX, alienY))
 
 running = True
 while running:
@@ -36,5 +41,6 @@ while running:
     elif playerX > 737:
         playerX = 737
     player(playerX, playerY)
+    aliens()
     pygame.display.update()
 pygame.quit()

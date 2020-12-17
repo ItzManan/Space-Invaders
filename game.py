@@ -20,8 +20,8 @@ speed_player = 0
 
 alienX = random.randint(0, 760)
 alienY = random.randint(50, 150)
-speed_alien_X = 1
-speed_alien_y = 0
+speed_alien_X = 0.3
+speed_alien_y = 40
 
 def player(x, y):
     screen.blit(ship, (x, y))
@@ -34,15 +34,16 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
+        
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                speed_player = -1
+                speed_player = -0.5
             if event.key == pygame.K_RIGHT:
-                speed_player = 1
+                speed_player = 0.5
         
         if event.type == pygame.KEYUP:
-            speed_player = 0
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                speed_player = 0
 
     screen.fill((0, 0, 0))
 
@@ -57,11 +58,12 @@ while running:
     alienX += speed_alien_X
 
     if alienX <= 0:
-        speed_alien_X = 0.8
+        speed_alien_X = 0.3
+        alienY +=speed_alien_y
 
     elif alienX > 760:
-        speed_alien_X = -0.8
-
+        speed_alien_X = -0.3
+        alienY +=speed_alien_y
     
 
     player(playerX, playerY)

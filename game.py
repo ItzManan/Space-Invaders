@@ -14,13 +14,15 @@ ship = pygame.image.load("spaceship.png")
 
 alien = pygame.image.load("Alien.png")
 
+background = pygame.image.load('Background.png')
+
 playerX = 370
 playerY = 480
 speed_player = 0
 
 alienX = random.randint(0, 760)
 alienY = random.randint(50, 150)
-speed_alien_X = 0.3
+speed_alien_X = 7
 speed_alien_y = 40
 
 def player(x, y):
@@ -37,17 +39,18 @@ while running:
         
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                speed_player = -0.5
+                speed_player = -8
             if event.key == pygame.K_RIGHT:
-                speed_player = 0.5
+                speed_player = 8
         
         if event.type == pygame.KEYUP:
-            if speed_player == 0.5 and event.key == pygame.K_RIGHT:
+            if speed_player == 8 and event.key == pygame.K_RIGHT:
                 speed_player = 0
-            if speed_player == -0.5 and event.key == pygame.K_LEFT:
+            if speed_player == -8 and event.key == pygame.K_LEFT:
                 speed_player = 0
 
     screen.fill((0, 0, 0))
+    screen.blit(background, (0, 0))
 
     playerX += speed_player
 
@@ -60,11 +63,11 @@ while running:
     alienX += speed_alien_X
 
     if alienX <= 0:
-        speed_alien_X = 0.3
+        speed_alien_X = 7
         alienY +=speed_alien_y
 
     elif alienX > 760:
-        speed_alien_X = -0.3
+        speed_alien_X = -7
         alienY +=speed_alien_y
     
 

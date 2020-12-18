@@ -18,16 +18,16 @@ speed_player = 0
 alien = pygame.image.load("Alien.png")
 alienX = random.randint(0, 760)
 alienY = random.randint(50, 150)
-speed_alien_X = 7
+speed_alien_X = 1
 speed_alien_y = 40
 
 
-background = pygame.image.load('Background.png')
+background = pygame.image.load('Background.jpg')
 
 bullet = pygame.image.load("bullet.png")
 bulletX = 0
 bulletY = 480
-speed_bullet_y = 10
+speed_bullet_y = 2
 bullet_fire = "ready"
 
 
@@ -51,17 +51,17 @@ while running:
         
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                speed_player = -8
+                speed_player = -1.2
             if event.key == pygame.K_RIGHT:
-                speed_player = 8
+                speed_player = 1.2
             
             if event.key == pygame.K_SPACE:
                 fire_bullet(playerX, bulletY)
         
         if event.type == pygame.KEYUP:
-            if speed_player == 8 and event.key == pygame.K_RIGHT:
+            if speed_player == 1.2 and event.key == pygame.K_RIGHT:
                 speed_player = 0
-            if speed_player == -8 and event.key == pygame.K_LEFT:
+            if speed_player == -1.2 and event.key == pygame.K_LEFT:
                 speed_player = 0
 
     screen.fill((0, 0, 0))
@@ -78,11 +78,11 @@ while running:
     alienX += speed_alien_X
 
     if alienX <= 0:
-        speed_alien_X = 7
+        speed_alien_X = 1
         alienY +=speed_alien_y
 
     elif alienX > 760:
-        speed_alien_X = -7
+        speed_alien_X = -1
         alienY +=speed_alien_y
 
     if bullet_fire == "fire":

@@ -21,7 +21,7 @@ speed_player = 0
 
 sound_on = pg.image.load("sound.png")
 sound_off = pg.image.load("no_sound.png")
-sound = "on"
+sound = ""
 
 
 alien = []
@@ -80,6 +80,8 @@ def game_over():
     screen.blit(over_text, (200, 240))
 
 def sound_img():
+    if sound == "":
+        screen.blit(sound_on, (750, 5))
     if sound == "on":
         screen.blit(sound_on, (750, 5))
         mixer.music.unpause()
@@ -90,7 +92,7 @@ def sound_img():
 mixer.music.load("background.wav")
 mixer.music.play(-1)
 
-clicked = 0
+clicked = 1
 
 
 running = True
@@ -99,7 +101,7 @@ while running:
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_position = pg.mouse.get_pos()
             if mouse_position[0] > 750 and mouse_position[0] < 782 and mouse_position[1] > 4 and mouse_position[1] < 37:
-                if clicked%2 == 0:
+                if clicked % 2 == 0:
                     sound = "on"
                 else: 
                     sound = "off"
@@ -115,7 +117,7 @@ while running:
                 speed_player = 2.2
             
             if event.key == pg.K_SPACE:
-                if bullet_fire is "ready":
+                if bullet_fire == "ready":
                     bulletX = playerX
                     fire_bullet(playerX, bulletY)
                     if sound == "on":

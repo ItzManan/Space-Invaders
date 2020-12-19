@@ -17,6 +17,10 @@ playerX = 370
 playerY = 480
 speed_player = 0
 
+sound_on = pg.image.load("sound.png")
+sound_off = pg.image.load("no_sound.png")
+sound = "on"
+
 
 alien = []
 alienX = []
@@ -35,8 +39,6 @@ for i in range(num_of_enemies):
 
 background = pg.image.load('Background.jpg')
 
-mixer.music.load("background.wav")
-mixer.music.play(-1)
 
 bullet = pg.image.load("bullet.png")
 bulletX = 0
@@ -75,9 +77,29 @@ def game_over():
     over_text = over.render("GAME OVER", True, (255, 255, 255))
     screen.blit(over_text, (200, 240))
 
+def sound_img():
+    if sound == "on":
+        screen.blit(sound_on, (750, 5))
+    elif sound == "off":
+        screen.blit(sound_off, (750, 5))
+
+if sound == "on":
+    mixer.music.load("background.wav")
+    mixer.music.play(-1)
+
 running = True
 while running:
     for event in pg.event.get():
+        clicked = 0
+        if event.type == pg.MOUSEBUTTONDOWN:
+            mouse_position = pg.mouse.get_pos()
+            if mouse_position[0] > 750 and mouse_position[0] < 782 and mouse_position[1] > 4 and mouse_position[1] < 37:
+                clicked += 1
+                if clicked%2 == 0:
+                    sound = "on"
+                else: 
+                    sound = "off"
+
         if event.type == pg.QUIT:
             running = False
         
@@ -91,8 +113,10 @@ while running:
                 if bullet_fire is "ready":
                     bulletX = playerX
                     fire_bullet(playerX, bulletY)
-                    bullet_sound = mixer.Sound("laser.wav")
-                    bullet_sound.play()
+                    if sound == "on":
+                        bullet_sound = mixer.Sound("laser.wav")
+                        bullet_sound.play()
+
         
         if event.type == pg.KEYUP:
             if speed_player == 2.2 and event.key == pg.K_RIGHT:
@@ -131,8 +155,9 @@ while running:
         collision = collide(alienX[i], alienY[i], bulletX, bulletY)
 
         if collision:
-            collision_sound = mixer.Sound("explosion.wav")
-            collision_sound.play()
+            if sound =="on":
+                collision_sound = mixer.Sound("explosion.wav")
+                collision_sound.play()
             bulletY = 480
             bullet_fire = "ready"
             score_value +=1
@@ -152,6 +177,7 @@ while running:
             bullet_fire = "ready"
 
         
+    sound_img()
 
     player(playerX, playerY)
 

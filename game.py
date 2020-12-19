@@ -4,6 +4,8 @@ from math import sqrt
 from pygame import mixer
 
 pg.init()
+pg.mixer.init()
+
 
 screen = pg.display.set_mode((800, 600))
 
@@ -80,12 +82,14 @@ def game_over():
 def sound_img():
     if sound == "on":
         screen.blit(sound_on, (750, 5))
+        mixer.music.unpause()
     elif sound == "off":
+        mixer.music.pause()
         screen.blit(sound_off, (750, 5))
 
-if sound == "on":
-    mixer.music.load("background.wav")
-    mixer.music.play(-1)
+mixer.music.load("background.wav")
+mixer.music.play(-1)
+
 
 running = True
 while running:

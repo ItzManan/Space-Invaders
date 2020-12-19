@@ -90,19 +90,20 @@ def sound_img():
 mixer.music.load("background.wav")
 mixer.music.play(-1)
 
+clicked = 0
+
 
 running = True
 while running:
     for event in pg.event.get():
-        clicked = 0
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_position = pg.mouse.get_pos()
             if mouse_position[0] > 750 and mouse_position[0] < 782 and mouse_position[1] > 4 and mouse_position[1] < 37:
-                clicked += 1
                 if clicked%2 == 0:
                     sound = "on"
                 else: 
                     sound = "off"
+                clicked += 1
 
         if event.type == pg.QUIT:
             running = False

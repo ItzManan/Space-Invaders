@@ -2,6 +2,7 @@ import pygame as pg
 import random
 from math import sqrt
 from pygame import mixer
+from pygame import cursors
 
 pg.init()
 pg.mixer.init()
@@ -21,6 +22,8 @@ speed_player = 0
 
 sound_on = pg.image.load("sound.png")
 sound_off = pg.image.load("no_sound.png")
+sound_on_hover = pg.image.load("sound_hover.png")
+sound_off_hover = pg.image.load("no_sound_hover.png")
 sound = ""
 
 
@@ -88,6 +91,15 @@ def sound_img():
     elif sound == "off":
         mixer.music.pause()
         screen.blit(sound_off, (750, 5))
+def hover_sound_img():
+    mouse_position = pg.mouse.get_pos()
+    if mouse_position[0] > 75 and mouse_position[0] < 782 and mouse_position[1] > 4 and mouse_position[1] < 37:
+        pg.mouse.set_cursor(*cursors.broken_x)
+    else:
+        pg.mouse.set_cursor(*cursors.arrow)
+
+
+
 
 mixer.music.load("background.wav")
 mixer.music.play(-1)
@@ -97,6 +109,7 @@ clicked = 1
 
 running = True
 while running:
+    hover_sound_img()
     for event in pg.event.get():
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_position = pg.mouse.get_pos()

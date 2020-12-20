@@ -9,6 +9,7 @@ pg.mixer.init()
 
 
 screen = pg.display.set_mode((800, 600))
+y = 0
 
 pg.display.set_caption("Space Invaders")
 
@@ -24,7 +25,7 @@ sound_on = pg.image.load("sound.png")
 sound_off = pg.image.load("no_sound.png")
 sound_on_hover = pg.image.load("sound_hover.png")
 sound_off_hover = pg.image.load("no_sound_hover.png")
-sound = ""
+sound = " "
 
 
 alien = []
@@ -42,7 +43,7 @@ for i in range(num_of_enemies):
     speed_alien_y.append(40)
 
 
-background = pg.image.load('Background.jpg')
+background = pg.image.load('Background.jpg').convert()
 
 
 bullet = pg.image.load("bullet.png")
@@ -83,7 +84,7 @@ def game_over():
     screen.blit(over_text, (200, 240))
 
 def sound_img():
-    if sound == "":
+    if sound == " ":
         screen.blit(sound_on, (750, 5))
     if sound == "on":
         screen.blit(sound_on, (750, 5))
@@ -91,6 +92,7 @@ def sound_img():
     elif sound == "off":
         mixer.music.pause()
         screen.blit(sound_off, (750, 5))
+
 def hover_sound_img():
     mouse_position = pg.mouse.get_pos()
     if mouse_position[0] > 75 and mouse_position[0] < 782 and mouse_position[1] > 4 and mouse_position[1] < 37:
@@ -98,25 +100,30 @@ def hover_sound_img():
     else:
         pg.mouse.set_cursor(*cursors.arrow)
 
-
-
-
 mixer.music.load("background.wav")
 mixer.music.play(-1)
 
 clicked = 1
 
-
 running = True
+
 while running:
+    rel_y = y % background.get_rect().height
+    screen.fill((0, 0, 0))
+    screen.blit(background, (0, rel_y - background.get_rect().height))
+    if rel_y < 600:
+        screen.blit(background, (0, rel_y))
+    y += 0.1
+
     hover_sound_img()
+
     for event in pg.event.get():
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_position = pg.mouse.get_pos()
             if mouse_position[0] > 750 and mouse_position[0] < 782 and mouse_position[1] > 4 and mouse_position[1] < 37:
                 if clicked % 2 == 0:
                     sound = "on"
-                else: 
+                elif clicked % 2 == 1: 
                     sound = "off"
                 clicked += 1
 
@@ -133,7 +140,7 @@ while running:
                 if bullet_fire == "ready":
                     bulletX = playerX
                     fire_bullet(playerX, bulletY)
-                    if sound == "on":
+                    if sound != "off":
                         bullet_sound = mixer.Sound("laser.wav")
                         bullet_sound.play()
 
@@ -143,9 +150,6 @@ while running:
                 speed_player = 0
             if speed_player == -2.2 and event.key == pg.K_LEFT:
                 speed_player = 0
-
-    screen.fill((0, 0, 0))
-    screen.blit(background, (0, 0))
 
     playerX += speed_player
 
@@ -175,7 +179,7 @@ while running:
         collision = collide(alienX[i], alienY[i], bulletX, bulletY)
 
         if collision:
-            if sound =="on":
+            if sound != "off":
                 collision_sound = mixer.Sound("explosion.wav")
                 collision_sound.play()
             bulletY = 480

@@ -53,11 +53,11 @@ speed_bullet_y = 5
 bullet_fire = "ready"
 
 score_value = 0
-font = pg.font.Font("freesansbold.ttf", 32)
+font = pg.font.Font("Poppins-Light.ttf", 32)
 textX = 10
 textY = 10
 
-over = pg.font.Font("freesansbold.ttf", 64)
+over = pg.font.Font("Poppins-Light.ttf", 64)
 
 def player(x, y):
     screen.blit(ship, (x, y))

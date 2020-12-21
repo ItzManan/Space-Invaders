@@ -59,6 +59,8 @@ textY = 10
 
 over = pg.font.Font("Poppins-Light.ttf", 64)
 
+play_button = pg.font.Font("Poppins-Light.ttf", 32)
+
 def player(x, y):
     screen.blit(ship, (x, y))
 
@@ -100,12 +102,138 @@ def hover_sound_img():
     else:
         pg.mouse.set_cursor(*cursors.arrow)
 
+def play_button_text():
+    play_text = play_button.render("PLAY", True, (0, 0, 0))
+    screen.blit(play_text, (163, 355))
+
 mixer.music.load("background.wav")
 mixer.music.play(-1)
 
+running = True
 clicked = 1
 
-running = True
+def main_loop():
+    global y
+    global bullet_fire
+    global playerX
+    global playerY
+    global bulletY
+    global sound
+    global speed_player
+    global score_value
+    global bulletX
+    global running
+    global clicked
+
+    
+
+    
+
+    while running:
+        rel_y = y % background.get_rect().height
+        screen.fill((0, 0, 0))
+        screen.blit(background, (0, rel_y - background.get_rect().height))
+        if rel_y < 600:
+            screen.blit(background, (0, rel_y))
+        y += 0.1
+
+        hover_sound_img()
+
+        for event in pg.event.get():
+            if event.type == pg.MOUSEBUTTONDOWN:
+                mouse_position = pg.mouse.get_pos()
+                if 782 > mouse_position[0] > 750 and 37 > mouse_position[1] > 4:
+                    if clicked % 2 == 0:
+                        sound = "on"
+                    elif clicked % 2 == 1: 
+                        sound = "off"
+                    clicked += 1
+
+            if event.type == pg.QUIT:
+                running = False
+            
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_LEFT:
+                    speed_player = -2.2
+                if event.key == pg.K_RIGHT:
+                    speed_player = 2.2
+                
+                if event.key == pg.K_SPACE:
+                    if bullet_fire == "ready":
+                        bulletX = playerX
+                        fire_bullet(playerX, bulletY)
+                        if sound != "off":
+                            bullet_sound = mixer.Sound("laser.wav")
+                            bullet_sound.play()
+
+            
+            if event.type == pg.KEYUP:
+                if speed_player == 2.2 and event.key == pg.K_RIGHT:
+                    speed_player = 0
+                if speed_player == -2.2 and event.key == pg.K_LEFT:
+                    speed_player = 0
+
+        playerX += speed_player
+
+        if playerX < -1:
+            playerX =-1
+
+        elif playerX > 737:
+            playerX = 737
+
+        for i in range(num_of_enemies):
+            if alienY[i] > 400:
+                for j in range(num_of_enemies):
+                    alienY[j] = 1000
+                game_over()
+                break
+
+            alienX[i] += speed_alien_X[i]
+
+            if alienX[i] <= 0:
+                speed_alien_X[i] = 1.5
+                alienY[i] +=speed_alien_y[i]
+
+            elif alienX[i] > 760:
+                speed_alien_X[i] = -1.5
+                alienY[i] +=speed_alien_y[i]
+            
+            collision = collide(alienX[i], alienY[i], bulletX, bulletY)
+
+            if collision:
+                if sound != "off":
+                    collision_sound = mixer.Sound("explosion.wav")
+                    collision_sound.play()
+                bulletY = 480
+                bullet_fire = "ready"
+                score_value +=1
+                
+                alienX[i] = random.randint(0, 760)
+                alienY[i] = random.randint(50, 150)
+                
+            aliens(alienX[i], alienY[i], i)
+
+
+        if bullet_fire == "fire":
+            fire_bullet(bulletX, bulletY)
+            bulletY -= speed_bullet_y
+
+            if bulletY < 0:
+                bulletY = 480
+                bullet_fire = "ready"
+
+            
+        sound_img()
+
+        player(playerX, playerY)
+
+        show_score(textX, textY)
+
+        pg.display.update()
+
+    pg.quit()
+
+
 
 while running:
     rel_y = y % background.get_rect().height
@@ -116,7 +244,7 @@ while running:
     y += 0.1
 
     hover_sound_img()
-
+    
     for event in pg.event.get():
         if event.type == pg.MOUSEBUTTONDOWN:
             mouse_position = pg.mouse.get_pos()
@@ -126,88 +254,21 @@ while running:
                 elif clicked % 2 == 1: 
                     sound = "off"
                 clicked += 1
+            
+            if 250 > mouse_position[0] > 150 and 400 > mouse_position[1] > 350:
+                main_loop()
 
+        
         if event.type == pg.QUIT:
             running = False
-        
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_LEFT:
-                speed_player = -2.2
-            if event.key == pg.K_RIGHT:
-                speed_player = 2.2
             
-            if event.key == pg.K_SPACE:
-                if bullet_fire == "ready":
-                    bulletX = playerX
-                    fire_bullet(playerX, bulletY)
-                    if sound != "off":
-                        bullet_sound = mixer.Sound("laser.wav")
-                        bullet_sound.play()
 
-        
-        if event.type == pg.KEYUP:
-            if speed_player == 2.2 and event.key == pg.K_RIGHT:
-                speed_player = 0
-            if speed_player == -2.2 and event.key == pg.K_LEFT:
-                speed_player = 0
-
-    playerX += speed_player
-
-    if playerX < -1:
-        playerX =-1
-
-    elif playerX > 737:
-        playerX = 737
-
-    for i in range(num_of_enemies):
-        if alienY[i] > 400:
-            for j in range(num_of_enemies):
-                alienY[j] = 1000
-            game_over()
-            break
-
-        alienX[i] += speed_alien_X[i]
-
-        if alienX[i] <= 0:
-            speed_alien_X[i] = 1.5
-            alienY[i] +=speed_alien_y[i]
-
-        elif alienX[i] > 760:
-            speed_alien_X[i] = -1.5
-            alienY[i] +=speed_alien_y[i]
-        
-        collision = collide(alienX[i], alienY[i], bulletX, bulletY)
-
-        if collision:
-            if sound != "off":
-                collision_sound = mixer.Sound("explosion.wav")
-                collision_sound.play()
-            bulletY = 480
-            bullet_fire = "ready"
-            score_value +=1
-            
-            alienX[i] = random.randint(0, 760)
-            alienY[i] = random.randint(50, 150)
-            
-        aliens(alienX[i], alienY[i], i)
-
-
-    if bullet_fire == "fire":
-        fire_bullet(bulletX, bulletY)
-        bulletY -= speed_bullet_y
-
-        if bulletY < 0:
-            bulletY = 480
-            bullet_fire = "ready"
-
-        
     sound_img()
 
-    player(playerX, playerY)
+    pg.draw.rect(screen, (255, 255, 0), (150, 350 ,100, 50))
 
-    show_score(textX, textY)
+    play_button_text()
 
     pg.display.update()
 
 
-pg.quit()

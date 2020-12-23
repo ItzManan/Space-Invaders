@@ -39,7 +39,7 @@ for i in range(num_of_enemies):
     alien.append(pg.image.load("Alien.png"))
     alienX.append(random.randint(0, 760))
     alienY.append(random.randint(50, 150))
-    speed_alien_X.append(4)
+    speed_alien_X.append(2.5)
     speed_alien_y.append(40)
 
 background = pg.image.load('Background.jpg').convert()
@@ -87,7 +87,7 @@ def ending():
         screen.blit(background, (0, rel_y - background.get_rect().height))
         if rel_y < 600:
             screen.blit(background, (0, rel_y))
-        y += 1
+        y += 0.7
 
         hover_sound_img_play_again()
 
@@ -225,7 +225,7 @@ def main_loop():
         screen.blit(background, (0, rel_y - background.get_rect().height))
         if rel_y < 600:
             screen.blit(background, (0, rel_y))
-        y += 1
+        y += 0.7
 
         hover_sound_img()
 
@@ -346,7 +346,7 @@ def main_screen():
         screen.blit(background, (0, rel_y - background.get_rect().height))
         if rel_y < 600:
             screen.blit(background, (0, rel_y))
-        y += 1
+        y += 0.7
 
         hover_main_menu()
 

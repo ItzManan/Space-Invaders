@@ -17,6 +17,8 @@ pg.display.set_caption("Space Invaders")
 icon = pg.image.load("logo.png")
 pg.display.set_icon(icon)
 
+main_menu_logo = pg.image.load("logo_main.png")
+
 ship = pg.image.load("spaceship.png")
 playerX = 370
 playerY = 480
@@ -24,8 +26,6 @@ speed_player = 0
 
 sound_on = pg.image.load("sound.png")
 sound_off = pg.image.load("no_sound.png")
-sound_on_hover = pg.image.load("sound_hover.png")
-sound_off_hover = pg.image.load("no_sound_hover.png")
 sound = " "
 
 alien = []
@@ -39,7 +39,7 @@ for i in range(num_of_enemies):
     alien.append(pg.image.load("Alien.png"))
     alienX.append(random.randint(0, 760))
     alienY.append(random.randint(50, 150))
-    speed_alien_X.append(30)
+    speed_alien_X.append(4)
     speed_alien_y.append(40)
 
 background = pg.image.load('Background.jpg').convert()
@@ -58,34 +58,42 @@ textY = 10
 
 over = pg.font.Font("Poppins-Light.ttf", 64)
 
-
+create = pg.font.Font("Poppins-Light.ttf", 16)
 
 def ending():
     global alienX
     global alienY
+    global bulletY
 
     alienY = []
     
     for i in range(num_of_enemies):
         alienY.append(random.randint(50, 150))
 
+    bulletY = 480
+
     global ship
     global sound
     global y
     global clicked
+
     run = True
+
     player(playerX, playerY)
+
     while run:
         rel_y = y % background.get_rect().height
         screen.fill((0, 0, 0))
         screen.blit(background, (0, rel_y - background.get_rect().height))
         if rel_y < 600:
             screen.blit(background, (0, rel_y))
-        y += 0.1
+        y += 1
 
-        hover_sound_img()
+        hover_sound_img_play_again()
+
         
         for event in pg.event.get():
+                       
             if event.type == pg.MOUSEBUTTONDOWN:
                 mouse_position = pg.mouse.get_pos()
                 if mouse_position[0] > 750 and mouse_position[0] < 782 and mouse_position[1] > 4 and mouse_position[1] < 37:
@@ -105,11 +113,6 @@ def ending():
         over_text = over.render("GAME OVER", True, (255, 255, 255))
         screen.blit(over_text, (200, 240))
         
-        pg.draw.rect(screen, (0, 255, 0), (310, 350 ,150, 50))
-
-        play_button_text(330, 360, 20, "PLAY AGAIN")
-                
-
         sound_img()
 
         show_score(textX, textY)
@@ -157,6 +160,34 @@ def hover_sound_img():
     else:
         pg.mouse.set_cursor(*cursors.arrow)
 
+def hover_sound_img_play_again():
+    mouse_position = pg.mouse.get_pos()
+    if mouse_position[0] > 750 and mouse_position[0] < 782 and mouse_position[1] > 4 and mouse_position[1] < 37:
+        pg.mouse.set_cursor(*cursors.broken_x)
+    else:
+        pg.mouse.set_cursor(*cursors.arrow)
+
+    if 450 > mouse_position[0] > 350 and 400 > mouse_position[1] > 350:            
+        pg.draw.rect(screen, (0, 200, 0), (310, 350 ,150, 50))
+        play_button_text(330, 360, 20, "PLAY AGAIN")
+    else:    
+        pg.draw.rect(screen, (0, 255, 0), (310, 350 ,150, 50))
+        play_button_text(330, 360, 20, "PLAY AGAIN")
+
+def hover_main_menu():
+    mouse_position = pg.mouse.get_pos()
+    if mouse_position[0] > 750 and mouse_position[0] < 782 and mouse_position[1] > 4 and mouse_position[1] < 37:
+        pg.mouse.set_cursor(*cursors.broken_x)
+    else:
+        pg.mouse.set_cursor(*cursors.arrow)
+
+    if 450 > mouse_position[0] > 350 and 400 > mouse_position[1] > 350:            
+        pg.draw.rect(screen, (0, 200, 0), (350, 350 ,100, 50))
+        play_button_text(363, 355, 32, "PLAY")
+    else:    
+        pg.draw.rect(screen, (0, 255, 0), (350, 350 ,100, 50))
+        play_button_text(363, 355, 32, "PLAY")
+
 def play_button_text(x, y, size, text):
     play_button = pg.font.Font("Poppins-Light.ttf", size)
     play_text = play_button.render(text, True, (0, 0, 0))
@@ -194,7 +225,7 @@ def main_loop():
         screen.blit(background, (0, rel_y - background.get_rect().height))
         if rel_y < 600:
             screen.blit(background, (0, rel_y))
-        y += 0.1
+        y += 1
 
         hover_sound_img()
 
@@ -315,10 +346,10 @@ def main_screen():
         screen.blit(background, (0, rel_y - background.get_rect().height))
         if rel_y < 600:
             screen.blit(background, (0, rel_y))
-        y += 0.1
+        y += 1
 
-        hover_sound_img()
-        
+        hover_main_menu()
+
         for event in pg.event.get():
             if event.type == pg.MOUSEBUTTONDOWN:
                 mouse_position = pg.mouse.get_pos()
@@ -329,7 +360,7 @@ def main_screen():
                         sound = "off"
                     clicked += 1
                 
-                if 250 > mouse_position[0] > 150 and 400 > mouse_position[1] > 350:
+                if 450 > mouse_position[0] > 350 and 400 > mouse_position[1] > 350:
                     main_loop()
                     break
                 
@@ -337,13 +368,12 @@ def main_screen():
             
             if event.type == pg.QUIT:
                 running = False
-            
-                
-        sound_img()
+        screen.blit(main_menu_logo, (175, 120))
 
-        pg.draw.rect(screen, (0, 255, 0), (150, 350 ,100, 50))
+        sound_img()  
 
-        play_button_text(163, 355, 32, "PLAY")
+        created_by = create.render("Made by: Manan Jain", True, (0, 255, 0))
+        screen.blit(created_by, (315, 580))
 
         pg.display.update()
 

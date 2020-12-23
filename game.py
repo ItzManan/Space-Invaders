@@ -28,7 +28,6 @@ sound_on_hover = pg.image.load("sound_hover.png")
 sound_off_hover = pg.image.load("no_sound_hover.png")
 sound = " "
 
-
 alien = []
 alienX = []
 alienY = []
@@ -42,7 +41,6 @@ for i in range(num_of_enemies):
     alienY.append(random.randint(50, 150))
     speed_alien_X.append(30)
     speed_alien_y.append(40)
-
 
 background = pg.image.load('Background.jpg').convert()
 
@@ -63,6 +61,14 @@ over = pg.font.Font("Poppins-Light.ttf", 64)
 
 
 def ending():
+    global alienX
+    global alienY
+
+    alienY = []
+    
+    for i in range(num_of_enemies):
+        alienY.append(random.randint(50, 150))
+
     global ship
     global sound
     global y
@@ -106,6 +112,7 @@ def ending():
 
         sound_img()
 
+        show_score(textX, textY)
 
         pg.display.update()
 
@@ -116,6 +123,7 @@ def player(x, y):
     screen.blit(ship, (x, y))
 
 def aliens(x, y, i):
+    global alien
     screen.blit(alien[i], (x, y))
 
 def fire_bullet(x, y):
@@ -176,7 +184,7 @@ def main_loop():
 
     running = True
     clicked = 1
-
+    score_value = 0
 
     
 
